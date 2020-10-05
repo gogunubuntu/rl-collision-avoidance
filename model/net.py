@@ -2,6 +2,7 @@ import math
 import numpy as np
 import torch
 import torch.nn as nn
+import random
 from torch.nn import init
 from torch.nn import functional as F
 
@@ -11,8 +12,7 @@ class Flatten(nn.Module):
     def forward(self, input):
 
         return input.view(input.shape[0], 1,  -1)
-
-
+    
 class CNNPolicy(nn.Module):
     def __init__(self, frames, action_space):
         super(CNNPolicy, self).__init__()
@@ -53,7 +53,7 @@ class CNNPolicy(nn.Module):
         logstd = self.logstd.expand_as(mean)
         std = torch.exp(logstd)
         action = torch.normal(mean, std)
-
+        
         # action prob on log scale
         logprob = log_normal_density(action, mean, std=std, log_std=logstd)
 
@@ -78,8 +78,49 @@ class CNNPolicy(nn.Module):
         dist_entropy = 0.5 + 0.5 * math.log(2 * math.pi) + logstd
         dist_entropy = dist_entropy.sum(-1).mean()
         return v, logprob, dist_entropy
+###########
 
+class CNNqnet(nn.Module) : 
+    def __init__(self, frames, out_dim):
+        super(CNNqnet, self).__init__()
+        self.out_dim = out_dim
+        self.fea_cv1 = nn.Conv1d(in_channels=frames, out_channels=32, kernel_size=5, stride=2, padding=1)
+        self.fea_cv2 = nn.Conv1d(in_channels=32, out_channels=32, kernel_size=3, stride=2, padding=1)
+        
+        self.fc1 = nn.Linear(128*32, 256)
+        self.fc2 =  nn.Linear(256+2+2, 128)
+        self.fc3 = nn.Linear(128, out_dim)
 
+    def forward(self, x, goal, speed):
+        
+        a = F.relu(self.fea_cv1(x))
+        a = F.relu(self.fea_cv2(a))
+        a = a.view(a.shape[0], -1)
+        a = F.relu(self.fc1(a))
+
+        a = torch.cat((a, goal, speed), dim=-1)
+        a = F.relu(self.fc2(a))
+        a = self.fc3(a)
+        #return action values.
+        return a
+
+    def sample_action(self, x, goal, speed, epsilon): 
+    
+        out = self.forward(x, goal, speed)
+        out_num = x.shape[0]
+        ret = []
+        #ret = np.zeros((out_num), dtype=np.int32)
+        for i in range(out_num) : 
+            coin = random.random()
+            if coin < epsilon : 
+                ret.append(random.randint(0, self.out_dim-1))
+            else : 
+                ret.append(out[i].argmax().item())
+        return ret
+
+    
+###########
+        
 class MLPPolicy(nn.Module):
     def __init__(self, obs_space, action_space):
         super(MLPPolicy, self).__init__()
