@@ -14,7 +14,7 @@ from collections import deque
 from model.net import CNNqnet
 from stage_world1 import StageWorld
 
-from model.dqn import dqn_update_stage1, generate_train_data
+from model.dqn import dqn_update_stage1
 from model.dqn import replay_buffer
 from model.dqn import generate_action
 
@@ -183,7 +183,7 @@ if __name__ == '__main__':
         if not os.path.exists(policy_path):
             os.makedirs(policy_path)
 
-        file = policy_path + '/Stage1_38600'
+        file = policy_path + '/201001'
         if os.path.exists(file):
             logger.info('####################################')
             logger.info('############Loading Model###########')
