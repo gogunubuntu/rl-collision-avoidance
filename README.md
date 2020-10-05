@@ -2,7 +2,7 @@
 
 This is a Pytorch implementation of the paper [Towards Optimally Decentralized Multi-Robot Collision Avoidance via Deep Reinforcement Learning](https://arxiv.org/abs/1709.10082)
 
-and modyfied code for collision avoidandce with DQN 
+(added)modyfied code for collision avoidandce with DQN 
 
 ![](./doc/stage2.gif)  |  ![](./doc/circle_test.gif)
 :-------------------------:|:-------------------------:
