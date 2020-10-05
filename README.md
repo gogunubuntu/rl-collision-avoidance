@@ -27,7 +27,7 @@ source devel/setup.bash
 To train Stage1, modify the hyper-parameters in `ppo_stage1.py` as you like, and running the following command:
 ```
 rosrun stage_ros_add_pose_and_crash stageros -g worlds/stage1.world
-mpiexec -np 24 python ppo_stage1.py
+mpiexec -np 10 python ppo_stage1.py
 ```
 To train Stage2, modify the hyper-parameters in `ppo_stage2.py` as you like, and running the following command:
 ```
