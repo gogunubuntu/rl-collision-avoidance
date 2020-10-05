@@ -34,7 +34,9 @@ To train Stage2, modify the hyper-parameters in `ppo_stage2.py` as you like, and
 rosrun stage_ros_add_pose_and_crash stageros -g worlds/stage2.world
 mpiexec -np 44 python ppo_stage2.py
 ```
-To train Stage1 using DQN, modify the hyper-parameters in `dqn_stage1.py` as you like, and running the following command:
+(added)To train Stage1 using DQN, modify the hyper-parameters in `dqn_stage1.py` as you like, and running the following command:
+q - network's input : laser observation, robot position, goal point, speed(linear velocity and angular velocity)
+q - network's output : 30 angular velocities in range from -1 to +1
 ```
 rosrun stage_ros_add_pose_and_crash stageros -g worlds/stage1.world
 mpiexec -np 10 python dqn_stage1.py
