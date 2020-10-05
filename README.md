@@ -34,6 +34,11 @@ To train Stage2, modify the hyper-parameters in `ppo_stage2.py` as you like, and
 rosrun stage_ros_add_pose_and_crash stageros -g worlds/stage2.world
 mpiexec -np 44 python ppo_stage2.py
 ```
+To train Stage1 using DQN, modify the hyper-parameters in `dqn_stage1.py` as you like, and running the following command:
+```
+rosrun stage_ros_add_pose_and_crash stageros -g worlds/stage1.world
+mpiexec -np 10 python dqn_stage1.py
+```
 ## How to test
 
 ```
